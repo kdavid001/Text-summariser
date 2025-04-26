@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Text Summarizer</h1>
+            <p>Paste your text below and get a concise summary using Azure AI</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-group">
+                <textarea id="input-text" placeholder="Enter your text here..."></textarea>
+                <button class="button" onclick="summarizeText()">
+                    <i class="fas fa-magic"></i>
+                    Summarize Text
+                </button>
+            </div>
+
+            <div class="loader" id="loader"></div>
+            <div class="error" id="error-message"></div>
+
+            <div class="result-container">
+                <h3>Summary:</h3>
+                <div class="summary-text" id="summary-result"></div>
+            </div>
+        </div>
+    </div>
+<script>
+    async function summarizeText() {
+        const inputText = document.getElementById('input-text').value;
+        const resultDiv = document.getElementById('summary-result');
+        const loader = document.getElementById('loader');
+        const errorMsg = document.getElementById('error-message');
+
+        if (!inputText.trim()) {
+            errorMsg.textContent = 'Please enter some text to summarize.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        loader.style.display = 'block';
+        errorMsg.style.display = 'none';
+        resultDiv.textContent = '';
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/summarize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: inputText })
+            });
+
+            const data = await response.json();
+
+            loader.style.display = 'none';
+
+            if (response.ok) {
+                resultDiv.textContent = data.summary;
+            } else {
+                errorMsg.textContent = data.error || 'An error occurred.';
+                errorMsg.style.display = 'block';
+            }
+        } catch (error) {
+            loader.style.display = 'none';
+            errorMsg.textContent = 'An error occurred while summarizing.';
+            errorMsg.style.display = 'block';
+        }
+    }
+</script>
+</body>
+</html>
