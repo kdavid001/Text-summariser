@@ -87,3 +87,6 @@ Project Structure
 ```
 https://ai.azure.com
 ```
+## Webpage Image 
+<img width="1680" alt="Screenshot 2025-04-26 at 21 30 14" src="https://github.com/user-attachments/assets/c9f6f296-3db2-4a24-a92b-8c3d9395584c" />
+
