@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Summarizer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        #text-length {
+            font-size: 14px;
+            color: #000;
+        }
+        #text-length.red {
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -15,13 +24,14 @@
 
         <div class="main-content">
             <div class="input-group">
-                <textarea id="input-text" placeholder="Enter your text here..."></textarea>
+                <textarea id="input-text" placeholder="Enter your text here..." oninput="updateTextLength()"></textarea>
                 <button class="button" onclick="summarizeText()">
                     <i class="fas fa-magic"></i>
                     Summarize Text
                 </button>
             </div>
 
+            <div id="text-length">Character count: 0/5000</div>
             <div class="loader" id="loader"></div>
             <div class="error" id="error-message"></div>
 
@@ -31,7 +41,26 @@
             </div>
         </div>
     </div>
+
 <script>
+    const maxTextLength = 5000;
+
+    // Update the character count and check if it exceeds the limit
+    function updateTextLength() {
+        const inputText = document.getElementById('input-text').value;
+        const lengthDisplay = document.getElementById('text-length');
+
+        // Update the displayed character count
+        lengthDisplay.textContent = `Character count: ${inputText.length}/${maxTextLength}`;
+
+        // Turn the text red if it exceeds 5000 characters
+        if (inputText.length > maxTextLength) {
+            lengthDisplay.classList.add('red');
+        } else {
+            lengthDisplay.classList.remove('red');
+        }
+    }
+
     async function summarizeText() {
         const inputText = document.getElementById('input-text').value;
         const resultDiv = document.getElementById('summary-result');
